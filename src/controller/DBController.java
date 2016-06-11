@@ -70,6 +70,92 @@ public class DBController implements IDBController {
 		}
 		return rcName;
 	}
+
+	@Override
+	public void setPBStatus(int input, int status) {
+
+		try {
+			PBDAO.getProduktBatch(input).setStatus(status);
+		} catch (DALException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
+
+	@Override
+	public void updatePB(int input) {
+		try {
+			PBDAO.updateProduktBatch(PBDAO.getProduktBatch(input));
+		} catch (DALException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	@Override
+	public int getRAAIDFromRCK(int input, int raavareNummer) {
+		
+		int raaid = -1;
+		try {
+			raaid = RCKDAO.getReceptKompList(input).get(raavareNummer).getRaavareId();
+		} catch (DALException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return raaid;
+	}
+
+	@Override
+	public int getRAAIDFromRAAB(int input) {
+		int raaid = -1;
+		try{
+			raaid = RAABDAO.getRaavareBatch(input).getRaavareId();
+		}catch (DALException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return raaid;
+	}
+
+	@Override
+	public String getRAAName(int input) {
+		String name = "";
+		try {
+			name = RAADAO.getRaavare(input).getRaavareNavn();
+		} catch (DALException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return name;
+	}
+
+	@Override
+	public double getTolerance(int RCID, int RAAID) {
+		
+		double tole = -1;
+		try {
+			tole = RCKDAO.getReceptKomp(RCID, RAAID).getTolerance();
+		} catch (DALException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return tole;
+	}
+
+	@Override
+	public double getNomNetto(int RCID, int RAAID) {
+		
+		double nomNet = -1;
+		try {
+			nomNet = RCKDAO.getReceptKomp(RCID, RAAID).getNomNetto();
+		} catch (DALException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return nomNet;
+	}
 	
 	
 	

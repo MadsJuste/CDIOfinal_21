@@ -88,4 +88,51 @@ public class WeightController implements IWeightController{
 		return intInput;
 	}
 
+	@Override
+	public String checkIfEmpty(String output) {
+		
+		writeToSocket("RM20 8 " +output);
+		String input = readSocket();
+		return input;
+	}
+
+	@Override
+	public String askUserToTaraWeight(String output) {
+		
+		writeToSocket("RM20 8 " +output);
+		String input = readSocket();
+		return input;
+	}
+
+	@Override
+	public int getRBID(String output) {
+		
+		writeToSocket("RM20 8 " +output);
+		String input = readSocket();
+		int intInput = Integer.parseInt(input.substring(7));
+		
+		return intInput;
+	}
+
+	@Override
+	public String completeWeighing(String output) {
+		writeToSocket("RM20 8 " +output);
+		String input = readSocket();
+		return input;
+	}
+
+	@Override
+	public String taraWeight() {
+		writeToSocket("T");
+		String input = readSocket();
+		return input;
+	}
+
+	@Override
+	public String getWeight() {
+		writeToSocket("S");
+		String input = readSocket();
+		return input;
+	}
+
 }
