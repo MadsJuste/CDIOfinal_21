@@ -68,6 +68,9 @@ public class WeightController implements IWeightController{
 
 		writeToSocket("RM20 8 " +output);
 		String input = readSocket();
+		if(input.equals("RM20 B")) {
+			input = readSocket();
+		}
 		int intInput = Integer.parseInt(input.substring(7));
 		
 		return intInput;
@@ -83,6 +86,9 @@ public class WeightController implements IWeightController{
 		
 		writeToSocket("RM20 8 " +output);
 		String input = readSocket();
+		if(input.equals("RM20 B")) {
+			input = readSocket();
+		}
 		int intInput = Integer.parseInt(input.substring(7));
 		
 		return intInput;
@@ -93,6 +99,9 @@ public class WeightController implements IWeightController{
 		
 		writeToSocket("RM20 8 " +output);
 		String input = readSocket();
+		if(input.equals("RM20 B")) {
+			input = readSocket();
+		}
 		return input;
 	}
 
@@ -101,6 +110,9 @@ public class WeightController implements IWeightController{
 		
 		writeToSocket("RM20 8 " +output);
 		String input = readSocket();
+		if(input.equals("RM20 B")) {
+			input = readSocket();
+		}
 		return input;
 	}
 
@@ -109,6 +121,9 @@ public class WeightController implements IWeightController{
 		
 		writeToSocket("RM20 8 " +output);
 		String input = readSocket();
+		if(input.equals("RM20 B")) {
+			input = readSocket();
+		}
 		int intInput = Integer.parseInt(input.substring(7));
 		
 		return intInput;
@@ -118,6 +133,9 @@ public class WeightController implements IWeightController{
 	public String completeWeighing(String output) {
 		writeToSocket("RM20 8 " +output);
 		String input = readSocket();
+		if(input.equals("RM20 B")) {
+			input = readSocket();
+		}
 		return input;
 	}
 
