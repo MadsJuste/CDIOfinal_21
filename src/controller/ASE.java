@@ -100,13 +100,13 @@ public class ASE implements IASE {
 		if(currentWeight > posTole){
 			wc.sendMessage("for meget af raavare");
 			//ikke done
-		}
-		
-		if(posTole > currentWeight && currentWeight > negTole){
-			wc.checkIfEmpty("fjern beholder + produkt");
-			finalWeight = Double.parseDouble(wc.getWeight());
-			
-		}
+		}else if(currentWeight < negTole){
+			wc.sendMessage("for lidt af raavare");
+			//ikke done
+		}else if(posTole > currentWeight && currentWeight > negTole){
+				wc.checkIfEmpty("fjern beholder + produkt");
+				finalWeight = Double.parseDouble(wc.getWeight());
+			}
 		
 		dbc.setPBStatus(pbID, 1);
 		dbc.updatePB(pbID);

@@ -152,7 +152,7 @@ public class WeightController implements IWeightController{
 	public String taraWeight() {
 		writeToSocket("T\r\n");
 		String input = readSocket();
-		input= input.substring(7,input.length()-5);
+		input= input.substring(7,input.indexOf("kg"));
 		return input;
 	}
 
@@ -160,7 +160,7 @@ public class WeightController implements IWeightController{
 	public String getWeight() {
 		writeToSocket("S\r\n");
 		String input = readSocket();
-		input = input.substring(7, input.length()-5);
+		input = input.substring(7, input.indexOf("kg"));
 		return input;
 	}
 
