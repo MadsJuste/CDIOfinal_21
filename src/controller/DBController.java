@@ -48,6 +48,7 @@ public class DBController implements IDBController {
 		} catch (DALException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			return "Ukent Bruger";
 		}	
 		return user;
 	}
@@ -67,6 +68,7 @@ public class DBController implements IDBController {
 		} catch (DALException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			return "Ukent ProduktBatch";
 		}
 		return rcName;
 	}
@@ -183,7 +185,7 @@ public class DBController implements IDBController {
 
 	@Override
 	public void writeTaraAtPBK(int input) {
-		PBKDAO.updateProduktBatchKomp(produktbatchkomponent);
+		//PBKDAO.updateProduktBatchKomp(produktbatchkomponent);
 		
 	}
 	

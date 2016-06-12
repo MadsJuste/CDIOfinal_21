@@ -10,8 +10,9 @@ public class ASE implements IASE {
 	DBController dbc = new DBController();
 	WeightController wc;
 	TUIController tuic = new TUIController();
-	String weightChoice, user, rcName, currentTara, OK, raaName;
-	int oprID, pbID,raaID, rcID, rbID, numberOfIngre, ingreNumber, TARA;
+	String weightChoice= "", user="", rcName="", currentTara="", OK="", raaName="";
+	int oprID = 0, pbID = 0,raaID = 0, rcID = 0, raaBID = 0, numberOfIngre = 0, ingreNumber = 0;
+	double tolerance = 0, nomNetto = 0, currentWeight  = 0, posTole = 0, negTole = 0,TARA = 0, finalWeight = 0;
 	
 	public void run(){
 		connectToDatabase();
@@ -34,10 +35,12 @@ public class ASE implements IASE {
 		}
 		if(weightChoice.equals("1")){
 			wc = new WeightController("169.254.2.3", 8000);
+			wc.connectToWeight();
 		}
 		
 		else if(weightChoice.equals("2")){
 			wc = new WeightController("localhost", 8000);
+			wc.connectToWeight();
 		}
 		else {
 			tuic.printMessage("Ukendt input");
@@ -49,7 +52,6 @@ public class ASE implements IASE {
 
 	@Override
 	public void chooseUser() {
-		
 		oprID = wc.askForUserID("Indtast operator nummer:");
 		user = dbc.checkUserID(oprID);
 		if(user.equals("Ukent Bruger")){
@@ -80,16 +82,31 @@ public class ASE implements IASE {
 		
 		OK = wc.askUserToTaraWeight("sæt beholder på vægten og tryk OK");
 		currentTara = wc.taraWeight();
-		TARA = Integer.parseInt(currentTara);
+		TARA = Double.parseDouble(currentTara);
 		//skal added en måde at updater ProduktBatchKomponenten... tara skal addes
 		
 		raaID = dbc.getRAAIDFromRCK(rcID, ingreNumber);
 		raaName = dbc.getRAAName(raaID);
-		rbID = wc.getRBID("Indtast RaavareBatch nummer på raavare "+ raaName);
+		raaBID = wc.getRBID("Indtast RaavareBatch nummer på raavare "+ raaName);
 		//ikke sikker på hvad jeg skal gøre med rbID.
 		
 		OK = wc.completeWeighing("Afvej den ønskede mængde og tryk OK");
+		tolerance = dbc.getTolerance(rcID, raaID);
+		nomNetto = dbc.getNomNetto(rcID, raaID);
+		currentWeight = Double.parseDouble(wc.getWeight());
+		tuic.printMessage(currentWeight + " " + nomNetto + " " + tolerance);
+		posTole = (currentWeight/100)*tolerance+nomNetto;
+		negTole = nomNetto-(currentWeight/100)*tolerance;
+		if(currentWeight > posTole){
+			wc.sendMessage("for meget af raavare");
+			//ikke done
+		}
 		
+		if(posTole > currentWeight && currentWeight > negTole){
+			wc.checkIfEmpty("fjern beholder + produkt");
+			finalWeight = Double.parseDouble(wc.getWeight());
+			
+		}
 		
 		dbc.setPBStatus(pbID, 1);
 		dbc.updatePB(pbID);

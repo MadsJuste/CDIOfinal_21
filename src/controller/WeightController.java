@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.net.Socket;
 
 import interfaces.IWeightController;
@@ -15,7 +16,7 @@ public class WeightController implements IWeightController{
 	private Socket socket;
 	private BufferedReader inputStream;
 	private DataOutputStream outputStream;
-	
+
 	
 	public WeightController(String ip, int port){
 		this.ip = ip;
@@ -27,8 +28,10 @@ public class WeightController implements IWeightController{
 		
 		try {
 			socket = new Socket(ip, port);
+
 			inputStream = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 			outputStream = new DataOutputStream(socket.getOutputStream());
+		
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -41,7 +44,8 @@ public class WeightController implements IWeightController{
 	public String writeToSocket(String output) {
 
 		try {
-			outputStream.writeBytes(output);
+			outputStream.writeBytes(output +"\r\n");
+			outputStream.flush();
 			return inputStream.readLine();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -57,7 +61,7 @@ public class WeightController implements IWeightController{
 		try {
 			input = inputStream.readLine();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
+			System.out.println("READ FAILED");
 			e.printStackTrace();
 		}
 		return input;
@@ -68,28 +72,23 @@ public class WeightController implements IWeightController{
 
 		writeToSocket("RM20 8 " +output);
 		String input = readSocket();
-		if(input.equals("RM20 B")) {
-			input = readSocket();
-		}
-		int intInput = Integer.parseInt(input.substring(7));
+		System.out.println(input);
+		int intInput = Integer.parseInt(input.substring(7, input.length()-5));
 		
 		return intInput;
 	}
 
 	@Override
 	public void sendMessage(String output) {
-		writeToSocket("D " + output);
+		writeToSocket("D " + output + "\r\n");
 	}
 
 	@Override
 	public int askForPBID(String output) {
 		
-		writeToSocket("RM20 8 " +output);
+		writeToSocket("RM20 8 " + output);
 		String input = readSocket();
-		if(input.equals("RM20 B")) {
-			input = readSocket();
-		}
-		int intInput = Integer.parseInt(input.substring(7));
+		int intInput = Integer.parseInt(input.substring(7, input.length()-5));
 		
 		return intInput;
 	}
@@ -99,9 +98,7 @@ public class WeightController implements IWeightController{
 		
 		writeToSocket("RM20 8 " +output);
 		String input = readSocket();
-		if(input.equals("RM20 B")) {
-			input = readSocket().substring(7);
-		}
+		input= input.substring(7,input.length()-5);
 		if(input.equals("OK")){
 			return input;
 		}
@@ -116,14 +113,12 @@ public class WeightController implements IWeightController{
 		
 		writeToSocket("RM20 8 " +output);
 		String input = readSocket();
-		if(input.equals("RM20 B")) {
-			input = readSocket().substring(7);
-		}
+		input= input.substring(7,input.length()-5);
 		if(input.equals("OK")){
 			return input;
 		}
 		else{
-			checkIfEmpty(output);
+			askUserToTaraWeight(output);
 		}
 		return input;
 	}
@@ -134,16 +129,8 @@ public class WeightController implements IWeightController{
 		writeToSocket("RM20 8 " +output);
 		String input = readSocket();
 		int intInput = -1;
-		if(input.equals("RM20 B")) input = readSocket().substring(7);
-		
-		if(input.equals("OK")){
-			intInput = Integer.parseInt(input.substring(7));
-			return intInput;
-		}
-		else{
-			checkIfEmpty(output);
-		}
-		
+		input= input.substring(7,input.length()-5);
+		intInput = Integer.parseInt(input.substring(7,input.length()-5));
 		return intInput;
 	}
 
@@ -151,23 +138,29 @@ public class WeightController implements IWeightController{
 	public String completeWeighing(String output) {
 		writeToSocket("RM20 8 " +output);
 		String input = readSocket();
-		if(input.equals("RM20 B")) {
-			input = readSocket().substring(7);
+		input= input.substring(7,input.length()-5);
+		if(input.equals("OK")){
+			return input;
+		}
+		else{
+			completeWeighing(output);
 		}
 		return input;
 	}
 
 	@Override
 	public String taraWeight() {
-		writeToSocket("T");
+		writeToSocket("T\r\n");
 		String input = readSocket();
+		input= input.substring(7,input.length()-5);
 		return input;
 	}
 
 	@Override
 	public String getWeight() {
-		writeToSocket("S");
+		writeToSocket("S\r\n");
 		String input = readSocket();
+		input = input.substring(7, input.length()-5);
 		return input;
 	}
 
