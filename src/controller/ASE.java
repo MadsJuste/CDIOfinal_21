@@ -17,13 +17,19 @@ public class ASE implements IASE {
 	public void run(){
 		connectToDatabase();
 		chooseWeight();
+		runProduction(0);
+	}
+	
+	public void runProduction(int ingreValue){
+		ingreNumber = ingreValue;
 		chooseUser();
 		choosePB();
-		
 		for(ingreNumber = 0; ingreNumber < numberOfIngre; ingreNumber++){
 			weightProduct(ingreNumber);
 		}
+		endProduction();
 	}
+	
 	@Override
 	public void chooseWeight() {
 		tuic.printMessage("vælg hvilken vægt du vil bruge.  Tast 1 for vægt. Tast 2 for simulator");
@@ -90,6 +96,15 @@ public class ASE implements IASE {
 		raaBID = wc.getRBID("Indtast RaavareBatch nummer på raavare "+ raaName);
 		//ikke sikker på hvad jeg skal gøre med rbID.
 		
+		weightCheck();
+		if(ingreNumber == 0){
+		dbc.setPBStatus(pbID, 1);
+		dbc.updatePB(pbID);
+		}
+	}
+	
+	@Override
+	public void weightCheck() {
 		OK = wc.completeWeighing("Afvej den ønskede mængde og tryk OK");
 		tolerance = dbc.getTolerance(rcID, raaID);
 		nomNetto = dbc.getNomNetto(rcID, raaID);
@@ -99,23 +114,30 @@ public class ASE implements IASE {
 		negTole = nomNetto-(currentWeight/100)*tolerance;
 		if(currentWeight > posTole){
 			wc.sendMessage("for meget af raavare");
-			//ikke done
+			weightCheck();
 		}else if(currentWeight < negTole){
 			wc.sendMessage("for lidt af raavare");
-			//ikke done
+			weightCheck();
 		}else if(posTole > currentWeight && currentWeight > negTole){
 				wc.checkIfEmpty("fjern beholder + produkt");
 				finalWeight = Double.parseDouble(wc.getWeight());
+				if(finalWeight != -TARA){
+					wc.sendMessage("Fejl i brutto check, start forfra");
+					runProduction(ingreNumber);
+				}
 			}
 		
-		dbc.setPBStatus(pbID, 1);
-		dbc.updatePB(pbID);
-
 	}
 
 	@Override
 	public void connectToDatabase() {
 		dbc.connectToDatabase();	
 	}
+	@Override
+	public void endProduction() {
+		dbc.setPBStatus(pbID, 2);
+		dbc.updatePB(pbID);
+	}
+	
 
 }

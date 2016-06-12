@@ -8,4 +8,6 @@ public interface IASE {
 	public void choosePB();
 	public void weightProduct(int ingreNumber);
 	public void connectToDatabase();
+	public void endProduction();
+	public void weightCheck();
 }
