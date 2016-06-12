@@ -15,5 +15,4 @@ public interface IWeightController {
 	public String taraWeight();
 	public String getWeight();
 	
-	
 }

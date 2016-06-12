@@ -156,6 +156,36 @@ public class DBController implements IDBController {
 		}
 		return nomNet;
 	}
+
+	@Override
+	public int getNumberOfIngre(int input) {
+		int numberOfIngre = -1;
+		try {
+			numberOfIngre = RCKDAO.getReceptKompList(input).size();
+		} catch (DALException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return numberOfIngre;
+	}
+
+	@Override
+	public int getRCID(int input) {
+		int rcID =-1;
+		try {
+			rcID = PBDAO.getProduktBatch(input).getReceptId();
+		} catch (DALException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return rcID;
+	}
+
+	@Override
+	public void writeTaraAtPBK(int input) {
+		PBKDAO.updateProduktBatchKomp(produktbatchkomponent);
+		
+	}
 	
 	
 	

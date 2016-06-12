@@ -10,14 +10,18 @@ public class ASE implements IASE {
 	DBController dbc = new DBController();
 	WeightController wc;
 	TUIController tuic = new TUIController();
-	String weightChoice, user, rcName;
-	int oprID, pbID;
+	String weightChoice, user, rcName, currentTara, OK, raaName;
+	int oprID, pbID,raaID, rcID, rbID, numberOfIngre, ingreNumber, TARA;
 	
 	public void run(){
 		connectToDatabase();
 		chooseWeight();
 		chooseUser();
 		choosePB();
+		
+		for(ingreNumber = 0; ingreNumber < numberOfIngre; ingreNumber++){
+			weightProduct(ingreNumber);
+		}
 	}
 	@Override
 	public void chooseWeight() {
@@ -66,14 +70,29 @@ public class ASE implements IASE {
 			choosePB();
 		}
 		else {
-			wc.sendMessage(rcName);
+			rcID = dbc.getRCID(pbID);
+			numberOfIngre = dbc.getNumberOfIngre(rcID);
 		}
 	}
 
 	@Override
-	public void weightProduct() {
-		// TODO Auto-generated method stub
+	public void weightProduct(int ingreNumber) {
 		
+		OK = wc.askUserToTaraWeight("sæt beholder på vægten og tryk OK");
+		currentTara = wc.taraWeight();
+		TARA = Integer.parseInt(currentTara);
+		//skal added en måde at updater ProduktBatchKomponenten... tara skal addes
+		
+		raaID = dbc.getRAAIDFromRCK(rcID, ingreNumber);
+		raaName = dbc.getRAAName(raaID);
+		rbID = wc.getRBID("Indtast RaavareBatch nummer på raavare "+ raaName);
+		//ikke sikker på hvad jeg skal gøre med rbID.
+		
+		
+		
+		dbc.setPBStatus(pbID, 1);
+		dbc.updatePB(pbID);
+
 	}
 
 	@Override
