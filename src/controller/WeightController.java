@@ -133,10 +133,16 @@ public class WeightController implements IWeightController{
 		
 		writeToSocket("RM20 8 " +output);
 		String input = readSocket();
-		if(input.equals("RM20 B")) {
-			input = readSocket();
+		int intInput = -1;
+		if(input.equals("RM20 B")) input = readSocket().substring(7);
+		
+		if(input.equals("OK")){
+			intInput = Integer.parseInt(input.substring(7));
+			return intInput;
 		}
-		int intInput = Integer.parseInt(input.substring(7));
+		else{
+			checkIfEmpty(output);
+		}
 		
 		return intInput;
 	}

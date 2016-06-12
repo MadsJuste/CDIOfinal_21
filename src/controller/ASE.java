@@ -88,6 +88,7 @@ public class ASE implements IASE {
 		rbID = wc.getRBID("Indtast RaavareBatch nummer på raavare "+ raaName);
 		//ikke sikker på hvad jeg skal gøre med rbID.
 		
+		OK = wc.completeWeighing("Afvej den ønskede mængde og tryk OK");
 		
 		
 		dbc.setPBStatus(pbID, 1);
