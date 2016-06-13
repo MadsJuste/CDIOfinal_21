@@ -60,6 +60,7 @@ public class ASE implements IASE {
 	public void chooseUser() {
 		oprID = wc.askForUserID("Indtast operator nummer:");
 		user = dbc.checkUserID(oprID);
+		System.out.println(user);
 		if(user.equals("Ukent Bruger")){
 			wc.sendMessage(user);
 			chooseUser();
@@ -71,7 +72,8 @@ public class ASE implements IASE {
 
 	@Override
 	public void choosePB() {
-		pbID = wc.askForPBID("Indtast ProduktBatch nummer");
+		pbID = wc.askForPBID("Indtast pb nummer");
+		System.out.println("PBID er " + pbID);
 		rcName = dbc.getRCName(pbID);
 		if(rcName.equals("Ukent ProduktBatch")){
 			wc.sendMessage(rcName);
@@ -97,9 +99,10 @@ public class ASE implements IASE {
 		//ikke sikker på hvad jeg skal gøre med rbID.
 		
 		weightCheck();
+		
 		if(ingreNumber == 0){
-		dbc.setPBStatus(pbID, 1);
-		dbc.updatePB(pbID);
+			dbc.setPBStatus(pbID, 1);
+			dbc.updatePB(pbID);
 		}
 	}
 	

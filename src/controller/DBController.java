@@ -63,6 +63,7 @@ public class DBController implements IDBController {
 			} 
 			else {
 				rcID = PBDAO.getProduktBatch(input).getReceptId();
+				System.out.println(rcID + " = rcID");
 				rcName = RCDAO.getRecept(rcID).getReceptNavn();
 			}
 		} catch (DALException e) {
