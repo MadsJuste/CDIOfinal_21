@@ -16,22 +16,6 @@ public class TUI implements ITUI {
 	}
 
 	@Override
-	public int stringToInt() {
-		int inputInt = 0;
-		try {
-			inputInt = Integer.parseInt(userInput.readLine());
-		} catch (NumberFormatException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return inputInt;
-	}
-
-	@Override
 	public void printMessage(String message) {
 		System.out.println(message);
 		

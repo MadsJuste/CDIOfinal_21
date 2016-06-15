@@ -33,6 +33,7 @@ public class ASE implements IASE {
 	@Override
 	public void chooseWeight() {
 		tuic.printMessage("vælg hvilken vægt du vil bruge.  Tast 1 for vægt. Tast 2 for simulator");
+		
 		try {
 			weightChoice = tuic.getString();
 		} catch (IOException e) {

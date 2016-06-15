@@ -59,7 +59,7 @@ public class DBController implements IDBController {
 		int rcID;
 		try {
 			if(input != PBDAO.getProduktBatch(input).getPbId()){
-			return "Ukent ProduktBatch";
+				throw new DALException("PBDAO");
 			} 
 			else {
 				rcID = PBDAO.getProduktBatchList().get(input).getReceptId();
