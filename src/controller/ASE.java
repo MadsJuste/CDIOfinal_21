@@ -3,16 +3,19 @@ package controller;
 import java.io.IOException;
 
 import interfaces.IASE;
-
+import interfaces.IDBController;
+import interfaces.ITUIController;
+import interfaces.IWeightController;
 
 public class ASE implements IASE {
 	
-	DBController dbc = new DBController();
-	WeightController wc;
-	TUIController tuic = new TUIController();
-	String weightChoice= "", user="", rcName="", currentTara="", OK="", raaName="";
-	int oprID = 0, pbID = 0,raaID = 0, rcID = 0, raaBID = 0, numberOfIngre = 0, ingreNumber = 0;
-	double tolerance = 0, nomNetto = 0, currentWeight  = 0, posTole = 0, negTole = 0,TARA = 0, finalWeight = 0;
+	private IDBController dbc = new DBController();
+	private IWeightController wc;
+	private ITUIController tuic = new TUIController();
+	
+	private String weightChoice= "", user="", rcName="", currentTara="", OK="", raaName="";
+	private int oprID = 0, pbID = 0,raaID = 0, rcID = 0, raaBID = 0, numberOfIngre = 0, ingreNumber = 0;
+	private double tolerance = 0, nomNetto = 0, currentWeight  = 0, posTole = 0, negTole = 0,TARA = 0, finalWeight = 0;
 	
 	public void run(){
 		connectToDatabase();
@@ -25,6 +28,8 @@ public class ASE implements IASE {
 		chooseUser();
 		choosePB();
 		for(ingreNumber = 0; ingreNumber < numberOfIngre; ingreNumber++){
+			System.out.println(ingreNumber);
+			
 			weightProduct(ingreNumber);
 		}
 		endProduction();
@@ -67,6 +72,7 @@ public class ASE implements IASE {
 			chooseUser();
 		}else{
 			wc.sendMessage(user);
+		
 		}
 		
 	}
@@ -74,14 +80,12 @@ public class ASE implements IASE {
 	@Override
 	public void choosePB() {
 		pbID = wc.askForPBID("Indtast pb nummer");
-		System.out.println("PBID er " + pbID);
 		rcName = dbc.getRCName(pbID);
-		System.out.println(rcName);
 		if(rcName.equals("Ukent ProduktBatch")){
-			wc.sendMessage(rcName);
 			choosePB();
 		}
 		else {
+			wc.sendMessage(rcName);
 			rcID = dbc.getRCID(pbID);
 			numberOfIngre = dbc.getNumberOfIngre(rcID);
 		}
@@ -89,43 +93,63 @@ public class ASE implements IASE {
 
 	@Override
 	public void weightProduct(int ingreNumber) {
-		
-		OK = wc.askUserToTaraWeight("sæt beholder på vægten og tryk OK");
-		currentTara = wc.taraWeight();
-		TARA = Double.parseDouble(currentTara);
-		//skal added en måde at updater ProduktBatchKomponenten... tara skal addes
-		
-		raaID = dbc.getRAAIDFromRCK(rcID, ingreNumber);
-		raaName = dbc.getRAAName(raaID);
-		raaBID = wc.getRBID("Indtast RaavareBatch nummer på raavare "+ raaName);
-		//ikke sikker på hvad jeg skal gøre med rbID.
-		
-		weightCheck();
-		
+		wc.checkIfEmpty("tøm vægten");
+		String check = wc.getWeight();
+		if(!check.isEmpty()){
+			weightProduct(ingreNumber);
+		}
 		if(ingreNumber == 0){
 			dbc.setPBStatus(pbID, 1);
 			dbc.updatePB(pbID);
 		}
+	
+		wc.taraWeight();
+		
+		
+		OK = wc.askUserToTaraWeight("saet beholder, tryk OK");
+		//gemmer vægt i PBK
+		currentTara = wc.getWeight();
+		TARA = Double.parseDouble(currentTara);
+		dbc.writeTaraAtPBK(pbID, TARA);
+		
+		//TARA vægt
+		currentTara = wc.taraWeight();
+		TARA = Double.parseDouble(currentTara);
+		System.out.println(TARA + " tara");
+				
+		raaID = dbc.getRAAIDFromRCK(rcID, ingreNumber);
+		raaName = dbc.getRAAName(raaID);
+		raaBID = wc.getRBID("RaaB nr på "+ raaName);
+		//ikke sikker på hvad jeg skal gøre med rbID.
+		
+		weightCheck();
+		
+		
 	}
 	
 	@Override
 	public void weightCheck() {
-		OK = wc.completeWeighing("Afvej den ønskede mængde og tryk OK");
+		OK = wc.completeWeighing("Afvej " + raaName + " og tryk OK");
 		tolerance = dbc.getTolerance(rcID, raaID);
 		nomNetto = dbc.getNomNetto(rcID, raaID);
 		currentWeight = Double.parseDouble(wc.getWeight());
 		tuic.printMessage(currentWeight + " " + nomNetto + " " + tolerance);
-		posTole = (currentWeight/100)*tolerance+nomNetto;
-		negTole = nomNetto-(currentWeight/100)*tolerance;
+		posTole = nomNetto*tolerance+nomNetto;
+		negTole = nomNetto-nomNetto*tolerance;
+		System.out.println("posTole " + posTole);
+		System.out.println("negTole " + negTole);
 		if(currentWeight > posTole){
 			wc.sendMessage("for meget af raavare");
 			weightCheck();
 		}else if(currentWeight < negTole){
 			wc.sendMessage("for lidt af raavare");
 			weightCheck();
-		}else if(posTole > currentWeight && currentWeight > negTole){
+		}else if(posTole >= currentWeight && currentWeight >= negTole){
 				wc.checkIfEmpty("fjern beholder + produkt");
 				finalWeight = Double.parseDouble(wc.getWeight());
+				dbc.writeWeightToPBK(pbID, currentWeight);
+				wc.taraWeight();
+
 				if(finalWeight != -TARA){
 					wc.sendMessage("Fejl i brutto check, start forfra");
 					runProduction(ingreNumber);
@@ -136,14 +160,13 @@ public class ASE implements IASE {
 
 	@Override
 	public void connectToDatabase() {
-		System.out.println("what");
 		dbc.connectToDatabase();
-		System.out.println("what2");
 	}
 	@Override
 	public void endProduction() {
 		dbc.setPBStatus(pbID, 2);
 		dbc.updatePB(pbID);
+		runProduction(0);
 	}
 	
 

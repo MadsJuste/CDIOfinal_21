@@ -7,7 +7,7 @@ public interface IWeightController {
 	public String readSocket();
 	public int askForUserID(String output);
 	public int askForPBID(String output);
-	public void sendMessage(String output);
+	public String sendMessage(String output);
 	public String checkIfEmpty(String output);
 	public String askUserToTaraWeight(String output);
 	public int getRBID(String output);

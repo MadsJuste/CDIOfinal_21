@@ -64,6 +64,7 @@ public class WeightController implements IWeightController{
 			System.out.println("READ FAILED");
 			e.printStackTrace();
 		}
+		
 		return input;
 	}
 	public String rm20(String output){
@@ -104,13 +105,19 @@ public class WeightController implements IWeightController{
 		String input = rm20(output);
 		
 		int intInput = Integer.parseInt(input);
-		System.out.println(intInput);
+	
 		return intInput;
 	}
 
 	@Override
-	public void sendMessage(String output) {
-		writeToSocket("P111 " + output + "\r\n");
+	public String sendMessage(String output) {
+		
+		String input = "";
+		//input = writeToSocket("D " + output);
+		input = writeToSocket("P111 " + output);
+		System.out.println(input);
+	
+		return input;
 		
 	}
 
@@ -118,37 +125,25 @@ public class WeightController implements IWeightController{
 	public int askForPBID(String output) {
 		
 		String input = rm20(output);
-		System.out.println(input);
+	
 		int intInput = Integer.parseInt(input);
-		System.out.println(intInput);
+		
 		return intInput;
 	}
 
 	@Override
 	public String checkIfEmpty(String output) {
-		
-		
 		String input = rm20(output);
 		
-		if(input.startsWith("RM20 A")){
-			return input;
-		}
-		else{
-			checkIfEmpty(output);
-		}
 		return input;
 	}
 
 	@Override
 	public String askUserToTaraWeight(String output) {
-			
-		String input = rm20(output);	
-		if(input.startsWith("RM20 A")){
-			return input;
-		}
-		else{
-			askUserToTaraWeight(output);
-		}
+	
+		String input = rm20(output);
+		System.out.println(input);
+		
 		return input;
 	}
 
@@ -167,27 +162,24 @@ public class WeightController implements IWeightController{
 		
 		String input = rm20(output);
 
-		if(input.startsWith("RM20 A")){
-			return input;
-		}
-		else{
-			completeWeighing(output);
-		}
 		return input;
 	}
 
 	@Override
 	public String taraWeight() {
-		writeToSocket("T\r\n");
-		String input = readSocket();
+		String input = writeToSocket("T\r\n");
+		//String input = readSocket();
 		input = input.replaceAll("[STkg ]", "");
 		return input;
 	}
 
 	@Override
 	public String getWeight() {
-		writeToSocket("S\r\n");
-		String input = readSocket();
+		String input = writeToSocket("S\r\n");
+		//String input = readSocket();
+		if(input.startsWith("ES")){
+			input = readSocket();
+		}
 		input = input.replaceAll("[STkg ]", "");
 		return input;
 	}
