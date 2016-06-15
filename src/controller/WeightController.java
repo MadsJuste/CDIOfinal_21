@@ -167,8 +167,8 @@ public class WeightController implements IWeightController{
 
 	@Override
 	public String taraWeight() {
-		String input = writeToSocket("T\r\n");
-		//String input = readSocket();
+		writeToSocket("T\r\n");
+		String input = readSocket();
 		input = input.replaceAll("[STkg ]", "");
 		return input;
 	}

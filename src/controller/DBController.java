@@ -55,16 +55,17 @@ public class DBController implements IDBController {
 
 	@Override
 	public String getRCName(int input) {
+		System.out.println("input " + input);
 		String rcName = "";
 		int rcID;
 		try {
-			if(input != PBDAO.getProduktBatchList().get(input).getReceptId()){
+			if(input != PBDAO.getProduktBatch(input).getPbId()){
 				throw new DALException("PBDAO");
 			} 
 			else {
 				rcID = PBDAO.getProduktBatchList().get(input).getReceptId();
 				System.out.println(rcID + " = rcID");
-				rcName = RCDAO.getRecept(rcID).getReceptNavn();
+				rcName = RCDAO.getReceptList().get(rcID-1).getReceptNavn();
 				System.out.println(rcName);
 			}
 		} catch (DALException e) {
@@ -103,7 +104,7 @@ public class DBController implements IDBController {
 		
 		int raaid = -1;
 		try {
-			raaid = RCKDAO.getReceptKompList(input).get(raavareNummer).getRaavareId();
+			raaid = RCKDAO.getReceptKompList(input-1).get(raavareNummer).getRaavareId();
 		} catch (DALException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -115,7 +116,7 @@ public class DBController implements IDBController {
 	public int getRAAIDFromRAAB(int input) {
 		int raaid = -1;
 		try{
-			raaid =RAABDAO.getRaavareBatchList().get(input).getRaavareId();
+			raaid =RAABDAO.getRaavareBatchList().get(input-1).getRaavareId();
 
 		}catch (DALException e) {
 			// TODO Auto-generated catch block
@@ -128,7 +129,7 @@ public class DBController implements IDBController {
 	public String getRAAName(int input) {
 		String name = "";
 		try {
-			name = RAADAO.getRaavareList().get(input).getRaavareNavn();
+			name = RAADAO.getRaavareList().get(input-1).getRaavareNavn();
 		} catch (DALException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

@@ -94,9 +94,10 @@ public class ASE implements IASE {
 
 	@Override
 	public void weightProduct(int ingreNumber) {
-		wc.checkIfEmpty("tøm vægten");
+		wc.checkIfEmpty("tom vaegten");
 		String check = wc.getWeight();
-		if(!check.isEmpty()){
+		System.out.println(check);
+		if(!check.equals("0.000")){
 			weightProduct(ingreNumber);
 		}
 		if(ingreNumber == 0){
@@ -119,8 +120,10 @@ public class ASE implements IASE {
 		System.out.println(TARA + " tara");
 				
 		raaID = dbc.getRAAIDFromRCK(rcID, ingreNumber);
+		System.out.println("raaID = " +raaID);
 		raaName = dbc.getRAAName(raaID);
-		raaBID = wc.getRBID("RaaB nr på "+ raaName);
+		System.out.println("raaName = " + raaName);
+		raaBID = wc.getRBID("RaaB nr paa "+ raaName);
 		//ikke sikker på hvad jeg skal gøre med rbID.
 		
 		weightCheck();
