@@ -62,7 +62,7 @@ public class DBController implements IDBController {
 			return "Ukent ProduktBatch";
 			} 
 			else {
-				rcID = PBDAO.getProduktBatch(input).getReceptId();
+				rcID = PBDAO.getProduktBatchList().get(input).getReceptId();
 				System.out.println(rcID + " = rcID");
 				rcName = RCDAO.getRecept(rcID).getReceptNavn();
 			}

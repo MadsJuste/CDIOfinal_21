@@ -75,6 +75,7 @@ public class ASE implements IASE {
 		pbID = wc.askForPBID("Indtast pb nummer");
 		System.out.println("PBID er " + pbID);
 		rcName = dbc.getRCName(pbID);
+		System.out.println(rcName);
 		if(rcName.equals("Ukent ProduktBatch")){
 			wc.sendMessage(rcName);
 			choosePB();
@@ -134,7 +135,9 @@ public class ASE implements IASE {
 
 	@Override
 	public void connectToDatabase() {
-		dbc.connectToDatabase();	
+		System.out.println("what");
+		dbc.connectToDatabase();
+		System.out.println("what2");
 	}
 	@Override
 	public void endProduction() {
