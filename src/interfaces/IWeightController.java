@@ -14,5 +14,6 @@ public interface IWeightController {
 	public String completeWeighing(String output);
 	public String taraWeight();
 	public String getWeight();
+	public String checkName(String output);
 	
 }

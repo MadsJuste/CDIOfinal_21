@@ -20,16 +20,14 @@ public class ASE implements IASE {
 	public void run(){
 		connectToDatabase();
 		chooseWeight();
-		runProduction(0);
+		runProduction();
 	}
 	
-	public void runProduction(int ingreValue){
-		ingreNumber = ingreValue;
+	public void runProduction(){
 		chooseUser();
 		choosePB();
 		for(ingreNumber = 0; ingreNumber < numberOfIngre; ingreNumber++){
-			System.out.println(ingreNumber);
-			
+			System.out.println(ingreNumber + "Ingre Number");
 			weightProduct(ingreNumber);
 		}
 		endProduction();
@@ -71,7 +69,10 @@ public class ASE implements IASE {
 			wc.sendMessage(user);
 			chooseUser();
 		}else{
-			wc.sendMessage(user);
+			String check = wc.checkName(user);
+			if(check.equals("wrong name")){
+				chooseUser();
+			}
 		
 		}
 		
@@ -152,7 +153,7 @@ public class ASE implements IASE {
 
 				if(finalWeight != -TARA){
 					wc.sendMessage("Fejl i brutto check, start forfra");
-					runProduction(ingreNumber);
+					weightProduct(ingreNumber);
 				}
 			}
 		
@@ -166,7 +167,7 @@ public class ASE implements IASE {
 	public void endProduction() {
 		dbc.setPBStatus(pbID, 2);
 		dbc.updatePB(pbID);
-		runProduction(0);
+		runProduction();
 	}
 	
 

@@ -184,5 +184,15 @@ public class WeightController implements IWeightController{
 		return input;
 	}
 
+	@Override
+	public String checkName(String output) {
+		String input = rm20(output);
+		if(input.equals("RM20 C")){
+			input = "wrong name";
+		}
+		
+		return input;
+	}
+
 
 }
