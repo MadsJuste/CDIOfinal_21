@@ -63,9 +63,10 @@ public class DBController implements IDBController {
 				throw new DALException("PBDAO");
 			} 
 			else {
-				rcID = PBDAO.getProduktBatchList().get(input).getReceptId();
+				System.out.println(input);
+				rcID = PBDAO.getProduktBatch(input).getReceptId();
 				System.out.println(rcID + " = rcID");
-				rcName = RCDAO.getReceptList().get(rcID-1).getReceptNavn();
+				rcName = RCDAO.getRecept(rcID).getReceptNavn();
 				System.out.println(rcName);
 			}
 		} catch (DALException e) {
@@ -81,6 +82,7 @@ public class DBController implements IDBController {
 
 		try {
 			PBDAO.getProduktBatchList().get(input).setStatus(status);
+			System.out.println("PB Status sat til 1");
 		} catch (DALException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -93,6 +95,7 @@ public class DBController implements IDBController {
 		try {
 			
 			PBDAO.updateProduktBatch(PBDAO.getProduktBatchList().get(input));
+			System.out.println("PB status Updateret");
 		} catch (DALException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -104,7 +107,8 @@ public class DBController implements IDBController {
 		
 		int raaid = -1;
 		try {
-			raaid = RCKDAO.getReceptKompList(input-1).get(raavareNummer).getRaavareId();
+			raaid = RCKDAO.getReceptKompList(input).get(raavareNummer).getRaavareId();
+			System.out.println("Raavare ID = " + raaid);
 		} catch (DALException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -117,6 +121,7 @@ public class DBController implements IDBController {
 		int raaid = -1;
 		try{
 			raaid =RAABDAO.getRaavareBatchList().get(input-1).getRaavareId();
+			System.out.println("RaavareID = " + raaid);
 
 		}catch (DALException e) {
 			// TODO Auto-generated catch block
@@ -130,6 +135,7 @@ public class DBController implements IDBController {
 		String name = "";
 		try {
 			name = RAADAO.getRaavareList().get(input-1).getRaavareNavn();
+			System.out.println("Raavare Navn = " + name);
 		} catch (DALException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -143,6 +149,7 @@ public class DBController implements IDBController {
 		double tole = -1;
 		try {
 			tole = RCKDAO.getReceptKompList(RCID).get(RAAID).getTolerance();
+			System.out.println("Tolerance = " + tole);
 		} catch (DALException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -157,6 +164,7 @@ public class DBController implements IDBController {
 		double nomNet = -1;
 		try {
 			nomNet = RCKDAO.getReceptKompList(RCID).get(RAAID).getNomNetto();
+			System.out.println("NomNetto = " +nomNet);
 		} catch (DALException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -166,13 +174,14 @@ public class DBController implements IDBController {
 
 	@Override
 	public int getNumberOfIngre(int input) {
-		int numberOfIngre = -1;
+		/*int numberOfIngre = -1;
 		try {
-			numberOfIngre = RCKDAO.getReceptKompList(input).size();
+			numberOfIngre = RCKDAO.getReceptKompList(input).get(input).
+			System.out.println("Number of ingrediants = " + numberOfIngre );
 		} catch (DALException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
+		}*/
 		return numberOfIngre;
 	}
 
@@ -180,7 +189,8 @@ public class DBController implements IDBController {
 	public int getRCID(int input) {
 		int rcID =-1;
 		try {
-			rcID = PBDAO.getProduktBatchList().get(input).getReceptId();
+			rcID = PBDAO.getProduktBatch(input).getReceptId();
+			System.out.println("Recept id = " + rcID);
 		} catch (DALException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -192,6 +202,7 @@ public class DBController implements IDBController {
 	public void writeTaraAtPBK(int input, double tara) {
 		try {
 			PBKDAO.getProduktBatchKompList().get(input).setTara(tara);
+			System.out.println("TARA ADDED");
 		} catch (DALException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -203,6 +214,7 @@ public class DBController implements IDBController {
 	public void writeWeightToPBK(int PBK, double weight) {
 		try {
 			PBKDAO.getProduktBatchKompList().get(PBK).setNetto(weight);
+			System.out.println("Weight ADDED");
 		} catch (DALException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

@@ -14,7 +14,7 @@ public class ASE implements IASE {
 	private ITUIController tuic = new TUIController();
 	
 	private String weightChoice= "", user="", rcName="", currentTara="", OK="", raaName="";
-	private int oprID = 0, pbID = 0,raaID = 0, rcID = 0, raaBID = 0, numberOfIngre = 0, ingreNumber = 0;
+	private int oprID = 0, pbID = 0,raaID = 0, rcID = 0, raaBID = 0, numberOfIngre = 3, ingreNumber = 0;
 	private double tolerance = 0, nomNetto = 0, currentWeight  = 0, posTole = 0, negTole = 0,TARA = 0, finalWeight = 0;
 	
 	public void run(){
@@ -27,7 +27,7 @@ public class ASE implements IASE {
 		chooseUser();
 		choosePB();
 		for(ingreNumber = 0; ingreNumber < numberOfIngre; ingreNumber++){
-			System.out.println(ingreNumber + "Ingre Number");
+			System.out.println("ingreNumer = " + ingreNumber);
 			weightProduct(ingreNumber);
 		}
 		endProduction();
@@ -36,7 +36,6 @@ public class ASE implements IASE {
 	@Override
 	public void chooseWeight() {
 		tuic.printMessage("vælg hvilken vægt du vil bruge.  Tast 1 for vægt. Tast 2 for simulator");
-		
 		try {
 			weightChoice = tuic.getString();
 		} catch (IOException e) {
@@ -44,7 +43,7 @@ public class ASE implements IASE {
 			e.printStackTrace();
 		}
 		if(weightChoice.equals("1")){
-			wc = new WeightController("169.254.2.3", 8000);
+			wc = new WeightController("169.254.2.2", 8000);
 			wc.connectToWeight();
 		}
 		
@@ -64,7 +63,6 @@ public class ASE implements IASE {
 	public void chooseUser() {
 		oprID = wc.askForUserID("Indtast operator nummer:");
 		user = dbc.checkUserID(oprID);
-		System.out.println(user);
 		if(user.equals("Ukent Bruger")){
 			wc.sendMessage(user);
 			chooseUser();
@@ -86,9 +84,10 @@ public class ASE implements IASE {
 			choosePB();
 		}
 		else {
-			wc.sendMessage(rcName);
+			System.out.println(rcName);
+			wc.sendMessage(rcName + " Tryk ok");
 			rcID = dbc.getRCID(pbID);
-			numberOfIngre = dbc.getNumberOfIngre(rcID);
+			//numberOfIngre = dbc.getNumberOfIngre(rcID);
 		}
 	}
 
@@ -97,7 +96,7 @@ public class ASE implements IASE {
 		wc.checkIfEmpty("tom vaegten");
 		String check = wc.getWeight();
 		System.out.println(check);
-		if(!check.equals("0.000")){
+		if(!check.equals("0.0000")){
 			weightProduct(ingreNumber);
 		}
 		if(ingreNumber == 0){
@@ -125,7 +124,7 @@ public class ASE implements IASE {
 		System.out.println("raaName = " + raaName);
 		raaBID = wc.getRBID("RaaB nr paa "+ raaName);
 		//ikke sikker på hvad jeg skal gøre med rbID.
-		
+		System.out.println(raaBID);
 		weightCheck();
 		
 		
@@ -133,7 +132,10 @@ public class ASE implements IASE {
 	
 	@Override
 	public void weightCheck() {
+		// anden gang stopper programmet her.
 		OK = wc.completeWeighing("Afvej " + raaName + " og tryk OK");
+	
+		
 		tolerance = dbc.getTolerance(rcID, raaID);
 		nomNetto = dbc.getNomNetto(rcID, raaID);
 		currentWeight = Double.parseDouble(wc.getWeight());

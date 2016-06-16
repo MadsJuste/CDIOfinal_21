@@ -67,17 +67,19 @@ public class WeightController implements IWeightController{
 		
 		return input;
 	}
-	public String rm20(String output){
-		writeToSocket("RM20 8 \"" + output + "\" \" \" \" \"\r\n");
 	
+	public String rm20(String output){
+		
+		writeToSocket("RM20 8 \"" + output + "\" \" \" \" \"\r\n");
+
 		String input = "";
 		
 			
 			try {
 				input = inputStream.readLine();
-				
+				System.out.println(input);
 				input = inputStream.readLine();
-				
+				System.out.println(input);
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -113,10 +115,7 @@ public class WeightController implements IWeightController{
 	public String sendMessage(String output) {
 		
 		String input = "";
-		//input = writeToSocket("D " + output);
-		input = writeToSocket("P111 " + output);
-		System.out.println(input);
-	
+		input =  rm20(output);
 		return input;
 		
 	}
@@ -152,6 +151,7 @@ public class WeightController implements IWeightController{
 		
 		
 		String input = rm20(output);
+		
 		int intInput = -1;
 		intInput = Integer.parseInt(input);
 		return intInput;
@@ -161,7 +161,7 @@ public class WeightController implements IWeightController{
 	public String completeWeighing(String output) {
 		
 		String input = rm20(output);
-
+		
 		return input;
 	}
 
@@ -170,6 +170,9 @@ public class WeightController implements IWeightController{
 		writeToSocket("T\r\n");
 		String input = readSocket();
 		input = input.replaceAll("[STkg ]", "");
+		if(input.equals("E")){
+			input = taraWeight();
+		}
 		return input;
 	}
 
