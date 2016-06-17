@@ -114,8 +114,8 @@ public class WeightController implements IWeightController{
 	@Override
 	public String sendMessage(String output) {
 		
-		String input = "";
-		input =  rm20(output);
+		String input = rm20(output);
+		
 		return input;
 		
 	}

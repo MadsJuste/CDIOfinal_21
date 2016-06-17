@@ -27,7 +27,7 @@ public class ASE implements IASE {
 		chooseUser();
 		choosePB();
 		for(ingreNumber = 0; ingreNumber < numberOfIngre; ingreNumber++){
-			System.out.println("ingreNumer = " + ingreNumber);
+			
 			weightProduct(ingreNumber);
 		}
 		endProduction();
@@ -84,7 +84,7 @@ public class ASE implements IASE {
 			choosePB();
 		}
 		else {
-			System.out.println(rcName);
+			
 			wc.sendMessage(rcName + " Tryk ok");
 			rcID = dbc.getRCID(pbID);
 			//numberOfIngre = dbc.getNumberOfIngre(rcID);
@@ -95,7 +95,7 @@ public class ASE implements IASE {
 	public void weightProduct(int ingreNumber) {
 		wc.checkIfEmpty("tom vaegten");
 		String check = wc.getWeight();
-		System.out.println(check);
+		
 		if(!check.equals("0.0000")){
 			weightProduct(ingreNumber);
 		}
@@ -123,7 +123,7 @@ public class ASE implements IASE {
 		raaName = dbc.getRAAName(raaID);
 		System.out.println("raaName = " + raaName);
 		raaBID = wc.getRBID("RaaB nr paa "+ raaName);
-		//ikke sikker på hvad jeg skal gøre med rbID.
+		
 		System.out.println(raaBID);
 		weightCheck();
 		
