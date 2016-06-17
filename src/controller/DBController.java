@@ -182,7 +182,7 @@ public class DBController implements IDBController {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}*/
-		return numberOfIngre;
+		return input;
 	}
 
 	@Override
